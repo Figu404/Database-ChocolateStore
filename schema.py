@@ -16,6 +16,20 @@ besokare_location = "data/besokare.csv"
 saljer_location = "data/saljer.csv"
 gillar_location = "data/gillar.csv"
 
+storeColumns = """CREATE TABLE store
+                (name nvarchar(50) not null,
+                address nvarchar(50),
+                primary key(name))"""
+customerColumns = """CREATE TABLE customer
+                (personal_code nvarschar(15) not null,
+                first_name nvarchar(50),
+                last_name nvarchar(50),
+                city nvarchar(50),
+                primary ket(personal_code))"""
+chocolateColumns = """CREATE TABLE chocolate
+                (product_number int not null,
+                company nvarchar(50)"""
+
 # Creating a cursor for the connection
 cursor = cnx.cursor()
 
@@ -43,12 +57,7 @@ def create_database(cursor, DB_NAME):
     print(f"Database {DB_NAME} created.")
     # Use database
     cnx.database = DB_NAME
-    create_table(cursor, """CREATE TABLE planets
-                   (name nvarchar(50) not null, rotation_period int,
-                   orbital_period int, diameter int, climate nvarchar(50),
-                   gravity nvarchar(50), terrain nvarchar(50),
-                   surface_water float, population nvarchar(50),
-                   primary key(name))""")
+    create_table(cursor, storeColumns)
     create_table(cursor, "CREATE TABLE species" +
                          "(name nvarchar(50) not null, " +
                          "classification nvarchar(50), " +

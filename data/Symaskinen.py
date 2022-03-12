@@ -15,13 +15,13 @@ def makeList(readern):
 print(os.getcwd())
 print(os.path.exists("personalcode.csv"))
 
-path1 = "data/costumer.csv"
-path2 = "data/choklad-score2.csv"
+path1 = "data/store.csv"
+path2 = "data/besoker.csv"
 
-newFile = "data/likes.csv"
+newFile = "data/visit.csv"
 
 columns1 = [0]
-columns2 = [0,1]
+columns2 = [0,1,2,3]
 rader = 100
 
 try:
@@ -60,7 +60,7 @@ try:
         
         for b in range(rader):
             row = []
-            val1 = rows1[b]
+            val1 = r.randint(0,len(lista1)-1)
             val2 = rows2[b]
             
             for c in columns1:
