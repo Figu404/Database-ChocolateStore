@@ -15,13 +15,14 @@ def makeList(readern):
 print(os.getcwd())
 print(os.path.exists("personalcode.csv"))
 
-path1 = "personalcode.csv"
-path2 = "dominos.csv"
-newFile = "blandad.csv"
+path1 = "data/costumer.csv"
+path2 = "data/choklad-score2.csv"
 
-columns1 = [0, 1]
-columns2 = [1,2]
-rader = 4
+newFile = "data/likes.csv"
+
+columns1 = [0]
+columns2 = [0,1]
+rader = 100
 
 try:
     with open(path1) as csvfile:
@@ -32,7 +33,7 @@ try:
         header = next(reader)  # Skip first row
         header2 = next(reader2)
 
-        f = open(newFile, "a")
+        f = open(newFile, "a",newline='')
         writer = csv.writer(f)
 
         lis = []
@@ -67,8 +68,8 @@ try:
             for c in columns2:
                 row.append(lista2[val2][c])
             writer.writerow(row)
-except FileNotFoundError:
-    print("Sorry, the file " + "naaw" + "does not exist.")
+except FileNotFoundError as e:
+    print("Sorry, the file " + "naaw" + "does not exist." + str(e))
 
 # def find(number, csv_file):
 #     for row in csv_file:
