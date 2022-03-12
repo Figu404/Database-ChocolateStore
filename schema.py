@@ -16,25 +16,8 @@ besokare_location = "data/besokare.csv"
 saljer_location = "data/saljer.csv"
 gillar_location = "data/gillar.csv"
 
-
-
-
 # Creating a cursor for the connection
 cursor = cnx.cursor()
-
-
-# Prints all the command?
-def printCommand(cursor):
-    row = cursor.fetchone()
-    i = 0
-    while row is not None:
-        if not (i == 0):
-            print(", ", end="")
-        print(row[0], end="")
-        row = cursor.fetchone()
-        i += 1
-    print()
-
 
 # Insert the data in the tables
 def insert_tabledata(cursor, location, table):
@@ -42,28 +25,7 @@ def insert_tabledata(cursor, location, table):
         with open(location) as csvfile:
             reader = csv.reader(csvfile)
             header = next(reader)  # Skip first row
-            y = "("
-            for i in range(len(header)):
-
-                if not(i == 0):
-                    y += ","
-                y += " NULLIF(%s, 'NA')"
-            y += ")"
-            for row in reader:
-                if not(row[0] == 'NA'):
-                    try:
-                        # Try to insert information into the table
-                        print(f"Inserting {row} into {table}: ")
-                        print()
-                        sqlCommand = f"INSERT INTO {table} VALUES {y}"
-                        print(sqlCommand)
-                        cursor.execute(sqlCommand, row)
-                    except mysql.connector.Error as err:
-                        print(err.msg)
-                    else:
-                        # Make sure data is committed to the database
-                        print("ok")
-                        cnx.commit()
+            
     except FileNotFoundError:
         print("Sorry, the file " + table + "does not exist.")
 
