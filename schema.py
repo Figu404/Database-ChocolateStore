@@ -21,14 +21,19 @@ storeColumns = """CREATE TABLE store
                 address nvarchar(50),
                 primary key(name))"""
 customerColumns = """CREATE TABLE customer
-                (personal_code nvarschar(15) not null,
+                (personal_code varschar(15) not null,
                 first_name nvarchar(50),
                 last_name nvarchar(50),
                 city nvarchar(50),
                 primary ket(personal_code))"""
 chocolateColumns = """CREATE TABLE chocolate
                 (product_number int not null,
-                company nvarchar(50)"""
+                company nvarchar(50),
+                taste nvarchar(50),
+                primary key(product_number)"""
+visitColumns = """CREATE TABLE visit
+                ()
+                """
 
 # Creating a cursor for the connection
 cursor = cnx.cursor()
