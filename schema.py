@@ -50,7 +50,7 @@ sellColumns = """CREATE TABLE sell
 likesColumns = """CREATE TABLE likes
                 (personal_code nvarchar(15) not null,
                 product_number varchar(50) not null,
-                rate float(15),
+                score float(15),
                 primary key(personal_code,product_number))"""
 
 
