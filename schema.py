@@ -2,9 +2,10 @@ from mysql.connector import errorcode
 import mysql.connector
 import csv
 import os
+import GUI
 # Start connection to server
 # Filips lösenord UJHqn7wVr5
-cnx = mysql.connector.connect(user='root', password='root',
+cnx = mysql.connector.connect(user='root', password='UJHqn7wVr5',
                               host='127.0.0.1')
 
 DB_NAME = 'chocolate_shop'
@@ -24,11 +25,7 @@ storeColumns = """CREATE TABLE store
                 address nvarchar(50),
                 primary key(name))"""
 customerColumns = """CREATE TABLE customer
-<<<<<<< HEAD
-                (personal_code varschar(15) not null,
-=======
                 (personal_code nvarchar(50) not null,
->>>>>>> c9507ba3138a72034ec5be9ee2ad817395e0b411
                 first_name nvarchar(50),
                 last_name nvarchar(50),
                 city nvarchar(50),
@@ -131,4 +128,6 @@ except mysql.connector.Error as err:
         insert_into_table(cursor, sell_location, "sell")
         insert_into_table(cursor, likes_location, "likes")
     else:
-        print()
+        print(err)
+GUI.start(cursor)
+print("hallå!!")    
