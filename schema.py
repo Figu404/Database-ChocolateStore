@@ -1,7 +1,7 @@
 from mysql.connector import errorcode
 import mysql.connector
 import csv
-
+import os
 # Start connection to server
 # Filips lösenord UJHqn7wVr5
 cnx = mysql.connector.connect(user='root', password='root',
@@ -12,7 +12,7 @@ cursor = cnx.cursor()
 
 
 # Set where to find the data to insert
-store_location = "data/store.csv"
+store_location = "data\\store.csv"
 customer_location = "data/customer.csv"
 chocolate_location = "data/chocolate.csv"
 visit_location = "data/visit.csv"
@@ -30,7 +30,7 @@ customerColumns = """CREATE TABLE customer
                 city nvarchar(50),
                 primary key(personal_code))"""
 chocolateColumns = """CREATE TABLE chocolate
-                (product_number int not null,
+                (product_number varchar(50) not null,
                 company nvarchar(50),
                 taste nvarchar(50),
                 primary key(product_number))"""
@@ -42,13 +42,13 @@ visitColumns = """CREATE TABLE visit
                 pay float(15),
                 primary key(personal_code,date,time))"""
 sellColumns = """CREATE TABLE sell
-                (name nvarchar(15) not null,
-                product_number int not null,
-                rate float(15),
+                (name nvarchar(50) not null,
+                product_number varchar(50) not null,
+                price float(15),
                 primary key(name,product_number))"""
 likesColumns = """CREATE TABLE likes
                 (personal_code nvarchar(15) not null,
-                product_number int not null,
+                product_number varchar(50) not null,
                 rate float(15),
                 primary key(personal_code,product_number))"""
 
@@ -96,7 +96,7 @@ def insert_into_table(cursor, file, table):
             # Inserts the values:
             cursor.execute(f"INSERT INTO {table} VALUES {newest_row};", row)
         except mysql.connector.Error as err:
-            print(err.msg)  # If the insert has failed.
+            print(err.msg, row)  # If the insert has failed.
         else:
             cnx.commit()
     data.close()
