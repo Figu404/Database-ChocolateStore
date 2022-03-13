@@ -1,208 +1,130 @@
 from mysql.connector import errorcode
 import mysql.connector
 import csv
-import msvcrt as m
+
 # Start connection to server
-cnx = mysql.connector.connect(user='root', password='UJHqn7wVr5',
+# Filips lösenord UJHqn7wVr5
+cnx = mysql.connector.connect(user='root', password='root',
                               host='127.0.0.1')
-# The name of the database
-DB_NAME = 'choklad-shop'
+
+DB_NAME = 'chocolate_shop'
+cursor = cnx.cursor()
+
 
 # Set where to find the data to insert
-shops_location = "data/shops.csv"
-kunder_location = "data/kunder.csv"
-choklad_location = "data/choklad.csv"
-besokare_location = "data/besokare.csv"
-saljer_location = "data/saljer.csv"
-gillar_location = "data/gillar.csv"
+store_location = "data/store.csv"
+customer_location = "data/customer.csv"
+chocolate_location = "data/chocolate.csv"
+visit_location = "data/visit.csv"
+sell_location = "data/sell.csv"
+likes_location = "data/likes.csv"
 
 storeColumns = """CREATE TABLE store
                 (name nvarchar(50) not null,
                 address nvarchar(50),
                 primary key(name))"""
 customerColumns = """CREATE TABLE customer
-                (personal_code nvarschar(15) not null,
+                (personal_code nvarchar(50) not null,
                 first_name nvarchar(50),
                 last_name nvarchar(50),
                 city nvarchar(50),
-                primary ket(personal_code))"""
+                primary key(personal_code))"""
 chocolateColumns = """CREATE TABLE chocolate
                 (product_number int not null,
-                company nvarchar(50)"""
+                company nvarchar(50),
+                taste nvarchar(50),
+                primary key(product_number))"""
+visitColumns = """CREATE TABLE visit
+                (name nvarchar(50),
+                personal_code nvarchar(15) not null,
+                date nvarchar(15) not null,
+                time nvarchar(15) not null,
+                pay float(15),
+                primary key(personal_code,date,time))"""
+sellColumns = """CREATE TABLE sell
+                (name nvarchar(15) not null,
+                product_number int not null,
+                rate float(15),
+                primary key(name,product_number))"""
+likesColumns = """CREATE TABLE likes
+                (personal_code nvarchar(15) not null,
+                product_number int not null,
+                rate float(15),
+                primary key(personal_code,product_number))"""
 
-# Creating a cursor for the connection
-cursor = cnx.cursor()
 
-# Insert the data in the tables
-def insert_tabledata(cursor, location, table):
-    try:
-        with open(location) as csvfile:
-            reader = csv.reader(csvfile)
-            header = next(reader)  # Skip first row
-            
-    except FileNotFoundError:
-        print("Sorry, the file " + table + "does not exist.")
-
-
-# Creating the database with the right tables and data
 def create_database(cursor, DB_NAME):
+    # Creates the database:
     try:
-        # Try to create database
-        cursor.execute(f"CREATE DATABASE {DB_NAME} DEFAULT " +
-                       "CHARACTER SET 'utf8'")
+        cursor.execute("""CREATE DATABASE {} DEFAULT CHARACTER SET
+        'utf8'""".format(DB_NAME))
+        print("created")
+    # If the connection fails:
     except mysql.connector.Error as err:
-        # Show error message and exit
         print("Faild to create database {}".format(err))
         exit(1)
-    print(f"Database {DB_NAME} created.")
-    # Use database
-    cnx.database = DB_NAME
-    create_table(cursor, storeColumns)
-    create_table(cursor, "CREATE TABLE species" +
-                         "(name nvarchar(50) not null, " +
-                         "classification nvarchar(50), " +
-                         "designation nvarchar(50), average_height int, " +
-                         "skin_colors nvarchar(50), " +
-                         "hair_colors nvarchar(50), " +
-                         "eye_colors nvarchar(50), " +
-                         "average_lifespan nvarchar(50)," +
-                         " language nvarchar(50), homeworld nvarchar(50), " +
-                         "primary key(name))")
 
 
-# Create table with sql command.
-def create_table(cursor, sql):
+def create_table(cursor, tables):
+    # Creates a table:
     try:
-        # Try to create table
-        print("Creating table species: ")
-        cursor.execute(sql)
+        print("Creating table: ")
+        cursor.execute(tables)
+    # If the connection fails:
     except mysql.connector.Error as err:
-        # If error message says that table alredy exist print it
-        # else print error message
         if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
             print("already exists.")
         else:
-            # Created the table
             print(err.msg)
-        m.getch()
     else:
-        # Created the table
         print("OK")
 
 
-# The menu
-def menu():
-    # print all the
-    print("1. List all planets.")
-    print("2. Search for planet details.")
-    print("3. Search for species with height higher than given number.")
-    print("4. What is the most likely desired climate of the given species?")
-    print("5. What is the avarage lifespan per species classification?")
-    print("Q. Quit")
-    print("-"*9)
-    # Ask what to do
-    choice = input("Please choose one option: ")
-    print("-"*9)
-    if choice == "1":
-        # List all planets
-        cursor.execute("SELECT name FROM planets")
-        printCommand(cursor)
-    elif choice == "2":
-        # Search for planet details
-        planet = input("Enter name of a planet: ")
-        print("-"*9)
-        cursor.execute(f"SELECT * FROM planets WHERE name LIKE '%{planet}'")
-        data = cursor.fetchall()
-        cursor.execute("SHOW COLUMNS FROM planets")
-        columns = cursor.fetchall()
-        y = 0
-        for row in data:
-            if not(y == 0):
-                print("- "*9)
-            y += 1
-            i = 0
-            for value in row:
-                if not i == 0:
-                    print(", ")
-                print(columns[i][0] + ":", value, end="")
-                i += 1
-            print()
-    elif choice == "3":
-        # Search for species with height higher than given number
+def insert_into_table(cursor, file, table):
+    # Read the csv files with tha data:
+    data = open(file)
+    read_file = csv.reader(data)
+    header = next(read_file)  # To not include the titles in the file as values
+    # Creates a string that is being used to insert values into tables.
+    new_row = "("
+    for column in header:
+        new_row += "NULLIF(%s,'NA'), "  # Makes the "NA"s to Mysqls "NULL".
+    newest_row = new_row[:-1][:-1]  # Deleting the two last charecters.
+    newest_row += ")"
+    for row in read_file:
         try:
-            # Try to pars to int
-            h = int(input("Enter a number: "))
-            print("-"*9)
-            cursor.execute("SELECT name FROM species " +
-                           f"WHERE average_height > {h}")
-            printCommand(cursor)
-        # Print Error
-        except ValueError:
-            print("That is not a number")
+            # Inserts the values:
+            cursor.execute(f"INSERT INTO {table} VALUES {newest_row};", row)
         except mysql.connector.Error as err:
-            print(err)
-    elif choice == "4":
-        # What is the most likely desired climate of the given species?
-        name = input("Enter name of the species: ")
-        print("-"*9)
-        # Find all species names like the input and find there homeplanets and
-        # the homplanets climate
-        cursor.execute("SELECT species.name, climate FROM planets" +
-                       " RIGHT JOIN species ON planets.name" +
-                       " = species.homeWorld WHERE planets.name IN " +
-                       "(SELECT homeWorld FROM " +
-                       f"species WHERE species.name LIKE '%{name}%')")
-
-        # Print a table from the information
-        print("_"*60)
-        print("|{:^25} | {:^30}|".format("Species", "Climate"))
-        print("|" + "="*26 + "|" + "="*31 + "|")
-        i = 0
-        for (name, climate) in cursor:
-            if not i == 0:
-                print("|" + "-"*26 + "|" + "-"*31 + "|")
-            print("|{:^25} | {:^30}|".format(name, climate if
-                                             climate is not None else "None"))
-            i += 1
-        print("¨"*60)
-
-    elif choice == "5":
-        # What is the avarage lifespan per species classification?
-        cursor.execute("SELECT DISTINCT(classification) FROM species")
-        for e in cursor.fetchall():
-            if e[0] is not None:
-                cursor.execute("SELECT AVG(average_lifespan) FROM species " +
-                               f"WHERE classification = '{e[0]}'")
-                average_lifespan = cursor.fetchall()[0][0]
-                print(e[0]+":", average_lifespan if
-                      average_lifespan != 0 else "indefinite")
-    elif choice.upper() == "Q":
-        return()
-    else:
-        print("The option does not exist please choose 1, 2, 3, 4, 5 or Q")
-    m.getch()
-    print("-"*9)
-    menu()
+            print(err.msg)  # If the insert has failed.
+        else:
+            cnx.commit()
+    data.close()
 
 
-# Try to use DATABASE and if it crashes create it
 try:
-    cursor.execute(f"USE {DB_NAME}")
+    # If the database already exists:
+    cursor.execute("USE {}".format(DB_NAME))
 except mysql.connector.Error as err:
-    # Database does not exist
     print("Database {} does not exist".format(DB_NAME))
+    # If the database does not exist, the database is being created:
     if err.errno == errorcode.ER_BAD_DB_ERROR:
-        # Create database
         create_database(cursor, DB_NAME)
-        # Inssert database in tables
-        insert_tabledata(cursor, planets_location, "planets")
-        insert_tabledata(cursor, species_location, "species")
+        print("Database created succesfully")
+        cnx.database = DB_NAME
+        # Creats the tables:
+        create_table(cursor, storeColumns)
+        create_table(cursor, customerColumns)
+        create_table(cursor, chocolateColumns)
+        create_table(cursor, visitColumns)
+        create_table(cursor, sellColumns)
+        create_table(cursor, likesColumns)
+        # Insert the data into tables from the csv files:
+        insert_into_table(cursor, store_location, "store")
+        insert_into_table(cursor, customer_location, "customer")
+        insert_into_table(cursor, chocolate_location, "chocolate")
+        insert_into_table(cursor, visit_location, "visit")
+        insert_into_table(cursor, sell_location, "sell")
+        insert_into_table(cursor, likes_location, "likes")
     else:
-        print(err)
-
-
-# Start the program
-menu()
-cursor.close()
-# Close the connection to the database.
-cnx.close()
+        print()
