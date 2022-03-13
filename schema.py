@@ -24,11 +24,7 @@ storeColumns = """CREATE TABLE store
                 address nvarchar(50),
                 primary key(name))"""
 customerColumns = """CREATE TABLE customer
-<<<<<<< HEAD
-                (personal_code varschar(15) not null,
-=======
                 (personal_code nvarchar(50) not null,
->>>>>>> c9507ba3138a72034ec5be9ee2ad817395e0b411
                 first_name nvarchar(50),
                 last_name nvarchar(50),
                 city nvarchar(50),
@@ -53,7 +49,7 @@ sellColumns = """CREATE TABLE sell
 likesColumns = """CREATE TABLE likes
                 (personal_code nvarchar(15) not null,
                 product_number varchar(50) not null,
-                rate float(15),
+                score float(15),
                 primary key(personal_code,product_number))"""
 
 
@@ -132,3 +128,4 @@ except mysql.connector.Error as err:
         insert_into_table(cursor, likes_location, "likes")
     else:
         print()
+
