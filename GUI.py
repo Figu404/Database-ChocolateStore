@@ -1,9 +1,7 @@
-import curses
 import tkinter as tk
 from tkinter import END, messagebox
-from matplotlib.pyplot import text
 import mysql.connector
-
+import sqlqueries as sql
 # Start connection to server
 
 def viewinfo(cursor, columns):
@@ -21,8 +19,6 @@ def viewinfo(cursor, columns):
         i=i+1
 
 def start(cursor):
-
-        
     def customer(personal_code):
         cursor.execute(f"SELECT * FROM customer WHERE personal_code = '{personal_code}'")
         copy = list(cursor)
@@ -48,7 +44,16 @@ def start(cursor):
         ent.grid(row=1,column=2)
         button = tk.Button(nam, text="visa", command=chocolate_score)
         button.grid(row=1, column=3)
-        
+
+
+    def Chocolate_personal(cursor):
+        choco = tk.Tk()
+        choco.title("Chocolate personal")
+        choco.geometry("400x250")
+        label = tk.Label(choco, text="Calculate avarage scores", padx=10, pady=10)
+        label.grid(row=1, column=1)
+        button = tk.Button(choco, text="visa", command=sql.avrage_rate_chocklate)
+        button.grid(row=1, column=3)
 
     def menu():
         men = tk.Tk()
@@ -61,7 +66,7 @@ def start(cursor):
         button.grid(row=1, column=3)
         label = tk.Label(frame, text="Skriv in personnummer(XXXX-XX-XX-xxxx):")
         label.grid(row=1, column=1)
-        button = tk.Button(men, text="Choklad personal")
+        button = tk.Button(men, text="Choklad personal", command = Chocolate_personal)
         button.pack()
         button = tk.Button(men, text="butik personal")
         button.pack()
