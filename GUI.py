@@ -2,21 +2,9 @@ import tkinter as tk
 from tkinter import END, messagebox
 import mysql.connector
 import sqlqueries as sql
+from functions import viewinfo
 # Start connection to server
 
-def viewinfo(cursor, columns):
-    answer = tk.Tk()
-    answer.geometry("400x250")
-    for n in range(len(columns)):
-        e=tk.Label(answer,width=10,text=columns[n],borderwidth=2, relief='ridge',anchor='w',bg='orange')
-        e.grid(row=0,column=n)
-    i = 1
-    for planets in cursor: 
-        for j in range(len(planets)):
-            e = tk.Label(answer, width=10, text=planets[j], borderwidth=2,relief='ridge', anchor="w")  
-            e.grid(row=i, column=j) 
-            #e.insert(END, planets[j])
-        i=i+1
 
 def start(cursor):
     def customer(personal_code):
@@ -25,6 +13,8 @@ def start(cursor):
         if len(copy) == 0:
             tk.messagebox.showerror(title="Error!", message="Not a valid personal_code")
             return
+        try:
+            cursor.execute("")
         nam = tk.Tk()
         for row in copy:
             nam.title(f"{row[1]} {row[2]} ({personal_code})")
@@ -35,8 +25,6 @@ def start(cursor):
             column_names = ["name", "data?", "vet ej"]
             viewinfo(cursor, column_names)
         
-        cursor.execute(f"CREATE VIEW {personal_code} AS first_name, last_name, product_number, name FROM customer RIGHT likes JOIN ON , visit")
-        
         nam.geometry("400x250")
         label = tk.Label(nam, text="Skriv in personnummer: ", padx=10, pady=10)
         label.grid(row=1, column=1)
@@ -46,13 +34,13 @@ def start(cursor):
         button.grid(row=1, column=3)
 
 
-    def Chocolate_personal(cursor):
+    def Chocolate_personal():
         choco = tk.Tk()
         choco.title("Chocolate personal")
         choco.geometry("400x250")
         label = tk.Label(choco, text="Calculate avarage scores", padx=10, pady=10)
         label.grid(row=1, column=1)
-        button = tk.Button(choco, text="visa", command=sql.avrage_rate_chocklate)
+        button = tk.Button(choco, text="visa", command=lambda : sql.avrage_rate_chocklate(cursor))
         button.grid(row=1, column=3)
 
     def menu():

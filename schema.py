@@ -3,10 +3,10 @@ import mysql.connector
 import csv
 import os
 import GUI
-from sqlqueries import avrage_rate_chocklate
+import sqlqueries as sq
 # Start connection to server
 # Filips lösenord UJHqn7wVr5
-cnx = mysql.connector.connect(user='root', password='root',
+cnx = mysql.connector.connect(user='root', password='UJHqn7wVr5',
                               host='127.0.0.1')
 
 DB_NAME = 'chocolate_shop'
@@ -130,6 +130,7 @@ except mysql.connector.Error as err:
         insert_into_table(cursor, likes_location, "likes")
     else:
         print(err)
-avrage_rate_chocklate(cursor)
+
+sq.cheapest_chocolate(cursor)
 GUI.start(cursor)
 print("hallå!!")    

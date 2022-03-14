@@ -1,4 +1,4 @@
-from GUI import viewinfo
+from functions import viewinfo
 import mysql.connector
 
 def avrage_rate_chocklate(cursor):
@@ -9,8 +9,14 @@ def avrage_rate_chocklate(cursor):
     viewinfo(cursor,["company", "taste", "score"])
 
 
-
 def cheapest_chocolate(cursor):
-    query = """SELECT"""
+    query = """SELECT store.name, store.address, MIN(sell.price)
+    FROM store JOIN sell ON store.name=sell.name
+    GROUP BY store.name, store.address ORDER BY MIN(sell.price) DESC"""
+    cursor.execute(query)
+    viewinfo(cursor,["Name","Adress", "Lowest price"])
 
 
+def peoples_score(cursor):
+    
+    query = """SELECT """
