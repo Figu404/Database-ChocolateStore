@@ -1,7 +1,5 @@
-import curses
 import tkinter as tk
 from tkinter import END, messagebox
-from matplotlib.pyplot import text
 import mysql.connector
 
 # Start connection to server
