@@ -6,20 +6,22 @@ import mysql.connector
 
 # Start connection to server
 
+def viewinfo(cursor, columns):
+    answer = tk.Tk()
+    answer.geometry("400x250")
+    for n in range(len(columns)):
+        e=tk.Label(answer,width=10,text=columns[n],borderwidth=2, relief='ridge',anchor='w',bg='orange')
+        e.grid(row=0,column=n)
+    i = 1
+    for planets in cursor: 
+        for j in range(len(planets)):
+            e = tk.Label(answer, width=10, text=planets[j], borderwidth=2,relief='ridge', anchor="w")  
+            e.grid(row=i, column=j) 
+            #e.insert(END, planets[j])
+        i=i+1
+
 def start(cursor):
-    def viewinfo(cursor, columns):
-        answer = tk.Tk()
-        answer.geometry("400x250")
-        for n in range(len(columns)):
-            e=tk.Label(answer,width=10,text=columns[n],borderwidth=2, relief='ridge',anchor='w',bg='orange')
-            e.grid(row=0,column=n)
-        i = 1
-        for planets in cursor: 
-            for j in range(len(planets)):
-                e = tk.Label(answer, width=10, text=planets[j], borderwidth=2,relief='ridge', anchor="w")  
-                e.grid(row=i, column=j) 
-                #e.insert(END, planets[j])
-            i=i+1
+
         
     def customer(personal_code):
         cursor.execute(f"SELECT * FROM customer WHERE personal_code = '{personal_code}'")
@@ -37,7 +39,7 @@ def start(cursor):
             column_names = ["name", "data?", "vet ej"]
             viewinfo(cursor, column_names)
         
-        cursor.execute(f"CREATE VIEW {personal_code} AS first_name, last_name, product_number, name FROM customer, likes, visit")
+        cursor.execute(f"CREATE VIEW {personal_code} AS first_name, last_name, product_number, name FROM customer RIGHT likes JOIN ON , visit")
         
         nam.geometry("400x250")
         label = tk.Label(nam, text="Skriv in personnummer: ", padx=10, pady=10)
