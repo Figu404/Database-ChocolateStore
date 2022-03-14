@@ -9,12 +9,20 @@ def avrage_rate_chocklate(cursor):
     viewinfo(cursor,["company", "taste", "score"])
 
 
-def cheapest_chocolate(cursor):
+def expensive_chocolate(cursor):
     query = """SELECT store.name, store.address, MIN(sell.price)
     FROM store JOIN sell ON store.name=sell.name
     GROUP BY store.name, store.address ORDER BY MIN(sell.price) DESC"""
     cursor.execute(query)
     viewinfo(cursor,["Name","Adress", "Lowest price"])
+
+
+def big_shoppers(cursor):
+    query = """SELECT customer.personal_code, customer.address, visit.pay 
+    FROM costumer JOIN visit ON customer.personal_code=visit.personal_code
+    GROUP BY customer.personal_code, customer_address ORDER BY visit.pay DESC"""
+    cursor.execute(query)
+    viewinfo(cursor,["Personal_Code", "City", "pay"])
 
 
 def peoples_score(cursor):
