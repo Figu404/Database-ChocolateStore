@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import END, messagebox
+from xml.dom.minidom import ReadOnlySequentialNamedNodeMap
+from matplotlib.pyplot import text
 import mysql.connector
 import sqlqueries as sql
 from functions import viewinfo
@@ -21,14 +23,20 @@ def start(cursor):
         for row in copy:
             nam.title(f"{row[1]} {row[2]} ({personal_code})")
 
-        nam.geometry("400x250")
-        label = tk.Label(nam, text="Skriv in personnummer: ", padx=10, pady=10)
+        nam.geometry("600x400")
+        label = tk.Label(nam, text= "", padx=10, pady=10)
+        label.grid(row=0, column=2)
+        label = tk.Label(nam, text="Insert company name: ", padx=10, pady=10)
         label.grid(row=1, column=1)
-        ent = tk.Entry(nam)
-        ent.grid(row=1,column=2)
-        button = tk.Button(nam, text="visa")
-        button.grid(row=1, column=3)
-        
+        company = tk.Entry(nam)
+        company.grid(row=1,column=2)
+        label = tk.Label(nam, text="Insert taste: ", padx=10, pady=10)
+        label.grid(row=1, column=3)
+        taste = tk.Entry(nam)
+        taste.grid(row=1,column=4)
+        button = tk.Button(nam, text="Search", command=lambda : sql.inexpensive_chocolate(cursor, company.get(), taste.get()))
+        button.grid(row=1, column=5)
+
 
 
     def Chocolate_personal():
@@ -36,8 +44,12 @@ def start(cursor):
         choco.title("Chocolate personal")
         choco.geometry("400x250")
         label = tk.Label(choco, text="Calculate avarage scores", padx=10, pady=10)
+        label.grid(row=0, column=2)
+        label = tk.Label(choco, text="Enter company name", padx=10, pady=10)
         label.grid(row=1, column=1)
-        button = tk.Button(choco, text="visa", command=lambda : sql.avrage_rate_chocklate(cursor))
+        company = tk.Entry(choco)
+        company.grid(row=1, column=2)
+        button = tk.Button(choco, text="visa", command=lambda : sql.avrage_rate_chocklate(cursor, company.get()))
         button.grid(row=1, column=3)
 
     def store_personal():
