@@ -134,5 +134,6 @@ except mysql.connector.Error as err:
         print(err)
 
 #sq.cheapest_chocolate(cursor)
+
 GUI.start(cursor)
 print("hallå!!")    
