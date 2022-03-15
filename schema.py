@@ -1,22 +1,15 @@
 from mysql.connector import errorcode
 import mysql.connector
 import csv
-import os
-
-from sqlalchemy import false, true
-from sympy import re
 import GUI
-import sqlqueries as sq
+
 # Start connection to server
 # Filips lösenord UJHqn7wVr5
-cnx = mysql.connector.connect(user='root', password='UJHqn7wVr5',
+cnx = mysql.connector.connect(user='root', password='root',
                               host='127.0.0.1', charset='utf8')
 
 DB_NAME = 'chocolate_shop'
-
 cursor = cnx.cursor()
-
-
 
 # Set where to find the data to insert
 store_location = "data\\store.csv"

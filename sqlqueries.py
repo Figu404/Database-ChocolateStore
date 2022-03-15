@@ -2,7 +2,6 @@ from ast import Store
 from pickle import TRUE
 import re
 from sqlalchemy import false
-
 from tkinter import messagebox
 from sympy import ComputationFailed
 from functions import viewinfo
@@ -27,6 +26,7 @@ def stores_popular_chocolate(cursor,store):
     cursor.execute(query)
     viewinfo(cursor, ["Company", "Taste", "Avrage score"])
 
+
 def cheapest_chocolate(cursor, store):
     query = f"""SELECT store.name, store.address, MIN(sell.price)
     FROM store JOIN sell ON store.name=sell.name
@@ -35,11 +35,13 @@ def cheapest_chocolate(cursor, store):
     cursor.execute(query)
     viewinfo(cursor,["Name","Adress", "Lowest price"])
 
+
 def personal_scores(cursor, personal_number):
     cursor.execute(f"""SELECT company, taste, score 
                     FROM likes JOIN chocolate ON likes.product_number = chocolate.product_number 
                     WHERE likes.personal_code = "{personal_number}" ORDER BY score DESC;""")
     viewinfo(cursor, ["Comany", "Taste", "Score"])
+
 
 def shoppers(cursor, store):
     query = f"""SELECT * FROM shoppers WHERE name LIKE "{store}%" """
@@ -57,9 +59,6 @@ def inexpensive_chocolate(cursor, company, taste):
     viewinfo(cursor,["Store_name", "Adress", "Company_name", "Taste", "Lowest price"])
 
 
-def peoples_score(cursor):
-    
-    query = """SELECT """
 def add_scores(cursor, personal_code, product_number, score, cnx):
     cursor.execute(f"SELECT * FROM chocolate WHERE product_number = '{product_number}' ")
     copy = list(cursor)
