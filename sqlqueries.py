@@ -1,42 +1,45 @@
 from ast import Store
+from pickle import TRUE
+import re
+from sqlalchemy import false
 
 from sympy import ComputationFailed
 from functions import viewinfo
 import mysql.connector
 
-def avrage_rate_chocklate(cursor, company):
+
+def avrage_rate_chocklate(cursor, company, taste):
     query = f"""SELECT chocolate.company, chocolate.taste, AVG(likes.score)
     FROM chocolate JOIN likes ON chocolate.product_number=likes.product_number
-    WHERE chocolate.company LIKE "%{company}%"
+    WHERE chocolate.company LIKE "%{company}%" AND chocolate.taste LIKE "%{taste}%"
     GROUP BY chocolate.taste, chocolate.company ORDER BY AVG(likes.score) DESC"""
     cursor.execute(query)
     viewinfo(cursor,["company", "taste", "score"])
 
 
-def cheapest_chocolate(cursor):
-    query = """SELECT store.name, store.address, MIN(sell.price)
-    FROM store JOIN sell ON store.name=sell.name
-    GROUP BY store.name, store.address ORDER BY MIN(sell.price) DESC"""
-    cursor.execute(query)
-    viewinfo(cursor,["Name","Adress", "Lowest price"])
-
 
 def stores_popular_chocolate(cursor,input):
     query = """SELECT"""
 
-
-def shoppers(cursor):
-    query = """SELECT * FROM shoppers"""
+def cheapest_chocolate(cursor, store):
+    query = f"""SELECT store.name, store.address, MIN(sell.price)
+    FROM store JOIN sell ON store.name=sell.name
+    WHERE store.name LIKE "{store}%"
+    GROUP BY store.name, store.address ORDER BY MIN(sell.price) DESC"""
     cursor.execute(query)
-    viewinfo(cursor, ["personal_code", "city", "pay"])
+    viewinfo(cursor,["Name","Adress", "Lowest price"])
 
+def personal_scores(cursor, personal_number):
+    cursor.execute(f"""SELECT company, taste, score 
+                    FROM likes JOIN chocolate ON likes.product_number = chocolate.product_number 
+                    WHERE likes.personal_code = "{personal_number}" ORDER BY score DESC;""")
+    viewinfo(cursor, ["Comany", "Taste", "Score"])
 
+def shoppers(cursor, store):
+    query = f"""SELECT * FROM shoppers WHERE name LIKE "{store}%" """
+    cursor.execute(query)
+    viewinfo(cursor, ["personal_code", "city", "store", "pay"])
 
-    # """SELECT customer.personal_code, customer.address, visit.pay 
-    # FROM costumer JOIN visit ON customer.personal_code=visit.personal_code
-    # ORDER BY visit.pay DESC"""
-    
-    viewinfo(cursor,["Personal_Code", "City", "pay"])
 
 def inexpensive_chocolate(cursor, company, taste):
     print(company, taste)
@@ -49,3 +52,29 @@ def inexpensive_chocolate(cursor, company, taste):
 def peoples_score(cursor):
     
     query = """SELECT """
+def add_scores(cursor, personal_code, product_number, score, cnx):
+    print("naa")
+    print("jaha")
+    cursor.execute(f"SELECT * FROM chocolate WHERE product_number = '{product_number}' ")
+    copy = list(cursor)
+    if len(copy) == 0:
+        return (False, "Product does not exist")
+    try:
+        score = int(score)
+    except ValueError:
+        return (False, "score is not an int")
+    if abs(score) <= 10:
+        try:
+            # Inserts the values:
+            cursor.execute(f"INSERT INTO likes VALUES ('{personal_code}', '{product_number}', {abs(score)};")
+        except mysql.connector.Error as err:
+            return (False, f"Could not insert {err}")  # If the insert has failed.
+        else:
+            cnx.commit()
+            return (True, "Inserted", copy[0][0], f"with score: {abs(score)}")
+    else:
+        return (False, "score is not between zero and 10")
+   
+    # 
+    #     return schema.insert_new_data(cursor, "",))
+    # 
