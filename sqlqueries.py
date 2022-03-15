@@ -56,6 +56,9 @@ def inexpensive_chocolate(cursor, company, taste):
     GROUP BY store.name, store.address, company, taste ORDER BY MIN(sell.price)  ASC;""")
     viewinfo(cursor,["Store_name", "Adress", "Company_name", "Taste", "Lowest price"])
 
+def get_visits(cursor, personal_code):
+    cursor.execute("SELECT name, date, time, pay FROM visit WHERE visit.personal_code = '{personal_code}' ;")
+    viewinfo(cursor, ("Store name", "Date", "Time", "Payed"))
 
 def peoples_score(cursor):
     
