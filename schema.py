@@ -7,10 +7,12 @@ import sqlqueries as sq
 # Start connection to server
 # Filips lösenord UJHqn7wVr5
 cnx = mysql.connector.connect(user='root', password='UJHqn7wVr5',
-                              host='127.0.0.1')
+                              host='127.0.0.1', charset='utf8')
 
 DB_NAME = 'chocolate_shop'
+
 cursor = cnx.cursor()
+
 
 
 # Set where to find the data to insert
@@ -131,6 +133,6 @@ except mysql.connector.Error as err:
     else:
         print(err)
 
-sq.cheapest_chocolate(cursor)
+#sq.cheapest_chocolate(cursor)
 GUI.start(cursor)
 print("hallå!!")    

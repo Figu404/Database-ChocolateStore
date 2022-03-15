@@ -13,8 +13,6 @@ def start(cursor):
         if len(copy) == 0:
             tk.messagebox.showerror(title="Error!", message="Not a valid personal_code")
             return
-        try:
-            cursor.execute("")
         nam = tk.Tk()
         for row in copy:
             nam.title(f"{row[1]} {row[2]} ({personal_code})")
