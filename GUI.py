@@ -8,8 +8,12 @@ from functions import viewinfo
 
 def start(cursor):
     def customer(personal_code):
-        cursor.execute(f"SELECT * FROM customer WHERE personal_code = '{personal_code}'")
-        copy = list(cursor)
+        try:
+            cursor.execute(f"SELECT * FROM customer WHERE personal_code = '{personal_code}'")
+            copy = list(cursor)
+        except mysql.connector.Error:
+            tk.messagebox.showerror(title="Error!", message="Not a valid personal_code")
+            return
         if len(copy) == 0:
             tk.messagebox.showerror(title="Error!", message="Not a valid personal_code")
             return
@@ -41,6 +45,15 @@ def start(cursor):
         button = tk.Button(choco, text="visa", command=lambda : sql.avrage_rate_chocklate(cursor))
         button.grid(row=1, column=3)
 
+    def store_personal():
+        store = tk.Tk()
+        store.title("Store personal")
+        store.geometry("1000x500")
+        label = tk.Label(store, text="Find the lowest price from all the stores", padx=10, pady=10)
+        label.grid(row=1, column=1)
+        button = tk.Button(store, text="visa", command=lambda : sql.expensive_chocolate(cursor))
+        button.grid(row=1, column=3)
+
     def menu():
         men = tk.Tk()
         men.title("Menu!")
@@ -54,7 +67,7 @@ def start(cursor):
         label.grid(row=1, column=1)
         button = tk.Button(men, text="Choklad personal", command = Chocolate_personal)
         button.pack()
-        button = tk.Button(men, text="butik personal")
+        button = tk.Button(men, text="butik personal", command=store_personal)
         button.pack()
         men.mainloop()
     menu()

@@ -26,9 +26,6 @@ def viewinfo(cursor, columns):
         my_game.heading(j,text=j,anchor=CENTER)
     
     for e in cursor:
-        for l in e:
-            print(l)
-        print(e)
         my_game.insert(parent='',index='end',iid=i,text='', values=e)
         i+=1
     my_game.pack()
