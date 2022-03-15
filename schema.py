@@ -6,7 +6,7 @@ import GUI
 import sqlqueries as sq
 # Start connection to server
 # Filips lösenord UJHqn7wVr5
-cnx = mysql.connector.connect(user='root', password='UJHqn7wVr5',
+cnx = mysql.connector.connect(user='root', password='root',
                               host='127.0.0.1', charset='utf8')
 
 DB_NAME = 'chocolate_shop'
@@ -55,6 +55,10 @@ likesColumns = """CREATE TABLE likes
                 product_number varchar(50) not null,
                 score float(15),
                 primary key(personal_code,product_number))"""
+querySmall_shoppers = """CREATE VIEW small_shoppers
+                AS SELECT customer.personal_code, customer.city, visit.pay 
+                FROM customer JOIN visit ON customer.personal_code=visit.personal_code
+                ORDER BY visit.pay DESC"""
 
 
 def create_database(cursor, DB_NAME):
@@ -130,6 +134,7 @@ except mysql.connector.Error as err:
         insert_into_table(cursor, visit_location, "visit")
         insert_into_table(cursor, sell_location, "sell")
         insert_into_table(cursor, likes_location, "likes")
+        cursor.execute(querySmall_shoppers)
     else:
         print(err)
 
