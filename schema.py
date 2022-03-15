@@ -2,6 +2,9 @@ from mysql.connector import errorcode
 import mysql.connector
 import csv
 import os
+
+from sqlalchemy import false, true
+from sympy import re
 import GUI
 import sqlqueries as sq
 # Start connection to server
@@ -53,12 +56,12 @@ sellColumns = """CREATE TABLE sell
 likesColumns = """CREATE TABLE likes
                 (personal_code nvarchar(15) not null,
                 product_number varchar(50) not null,
-                score float(15),
+                score int,
                 primary key(personal_code,product_number))"""
 queryShoppers = """CREATE VIEW shoppers
-                AS SELECT customer.personal_code, customer.city, MAX(visit.pay) 
+                AS SELECT customer.personal_code, customer.city, visit.name,  MAX(visit.pay) 
                 FROM customer JOIN visit ON customer.personal_code=visit.personal_code
-                GROUP BY customer.personal_code, customer.city ORDER BY MAX(visit.pay) DESC"""
+                GROUP BY customer.personal_code, customer.city, visit.name ORDER BY MAX(visit.pay) DESC"""
 
 
 def create_database(cursor, DB_NAME):
@@ -87,6 +90,8 @@ def create_table(cursor, tables):
     else:
         print("OK")
 
+def insert_new_data(cursor, table, values):
+    pass
 
 def insert_into_table(cursor, file, table):
     # Read the csv files with tha data:
@@ -137,6 +142,6 @@ except mysql.connector.Error as err:
         cursor.execute(queryShoppers)
     else:
         print(err)
-
-GUI.start(cursor)
-print("hallå!!")    
+print("NU STARTAR VI!")
+GUI.start(cursor,cnx)
+print("Hallå")
