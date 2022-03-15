@@ -55,10 +55,10 @@ likesColumns = """CREATE TABLE likes
                 product_number varchar(50) not null,
                 score float(15),
                 primary key(personal_code,product_number))"""
-querySmall_shoppers = """CREATE VIEW small_shoppers
-                AS SELECT customer.personal_code, customer.city, visit.pay 
+queryShoppers = """CREATE VIEW shoppers
+                AS SELECT customer.personal_code, customer.city, MAX(visit.pay) 
                 FROM customer JOIN visit ON customer.personal_code=visit.personal_code
-                ORDER BY visit.pay DESC"""
+                GROUP BY customer.personal_code, customer.city ORDER BY MAX(visit.pay) DESC"""
 
 
 def create_database(cursor, DB_NAME):
@@ -134,11 +134,9 @@ except mysql.connector.Error as err:
         insert_into_table(cursor, visit_location, "visit")
         insert_into_table(cursor, sell_location, "sell")
         insert_into_table(cursor, likes_location, "likes")
-        cursor.execute(querySmall_shoppers)
+        cursor.execute(queryShoppers)
     else:
         print(err)
-
-#sq.cheapest_chocolate(cursor)
 
 GUI.start(cursor)
 print("hallå!!")    

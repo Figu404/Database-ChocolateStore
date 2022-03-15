@@ -21,8 +21,8 @@ def stores_popular_chocolate(cursor,input):
     query = """SELECT"""
 
 
-def small_shoppers(cursor):
-    query = """SELECT * FROM small_shoppers"""
+def shoppers(cursor):
+    query = """SELECT * FROM shoppers"""
     cursor.execute(query)
     viewinfo(cursor, ["personal_code", "city", "pay"])
 
