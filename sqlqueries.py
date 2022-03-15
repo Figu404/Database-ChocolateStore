@@ -3,6 +3,7 @@ from pickle import TRUE
 import re
 from sqlalchemy import false
 
+from tkinter import messagebox
 from sympy import ComputationFailed
 from functions import viewinfo
 import mysql.connector
@@ -60,8 +61,6 @@ def peoples_score(cursor):
     
     query = """SELECT """
 def add_scores(cursor, personal_code, product_number, score, cnx):
-    print("naa")
-    print("jaha")
     cursor.execute(f"SELECT * FROM chocolate WHERE product_number = '{product_number}' ")
     copy = list(cursor)
     if len(copy) == 0:
@@ -71,14 +70,19 @@ def add_scores(cursor, personal_code, product_number, score, cnx):
     except ValueError:
         return (False, "score is not an int")
     if abs(score) <= 10:
-        try:
-            # Inserts the values:
-            cursor.execute(f"INSERT INTO likes VALUES ('{personal_code}', '{product_number}', {abs(score)};")
-        except mysql.connector.Error as err:
-            return (False, f"Could not insert {err}")  # If the insert has failed.
+
+        msgBox = messagebox.askquestion ('Add score',f'Are you sure you want to add score\nscore:{abs(score)} | for chocolate: {copy[0][2]} | from the company:{copy[0][1]}"',icon = 'warning')
+        if msgBox == "yes":
+            try:
+                # Inserts the values:
+                cursor.execute(f"INSERT INTO likes VALUES ('{personal_code}', '{product_number}', {abs(score)}) ON DUPLICATE KEY UPDATE likes.score = {abs(score)};")
+            except mysql.connector.Error as err:
+                return (False, f"Could not insert {err}")  # If the insert has failed.
+            else:
+                cnx.commit()
+                return (True, f"Inserted score:{abs(score)} | for chocolate: {copy[0][2]} | from the company:{copy[0][1]}")
         else:
-            cnx.commit()
-            return (True, "Inserted", copy[0][0], f"with score: {abs(score)}")
+            return (False, "Acction canceled")
     else:
         return (False, "score is not between zero and 10")
    
