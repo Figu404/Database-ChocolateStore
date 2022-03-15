@@ -23,8 +23,8 @@ def start(cursor, cnx):
         for row in copy:
             nam.title(f"{row[1]} {row[2]} ({personal_code})")
 
-        nam.geometry("600x400")
-        label = tk.Label(nam, text= "Find the cheapest chocolate", padx=10, pady=10, font=('Helvetica', 12, 'bold'))
+        nam.geometry("800x400")
+        label = tk.Label(nam, text= "Find the cheapest chocolate:", padx=10, pady=10, font=('Helvetica', 12, 'bold'))
         label.grid(row=0, column=2)
         label = tk.Label(nam, text="Insert company name: ", padx=10, pady=10)
         label.grid(row=1, column=1)
@@ -37,10 +37,15 @@ def start(cursor, cnx):
         button = tk.Button(nam, text="Search", command=lambda : sql.inexpensive_chocolate(cursor, company.get(), taste.get()))
         button.grid(row=1, column=5)
 
-        label = tk.Label(nam, text= "Find all your ratings", padx=10, pady=10, font=('Helvetica', 12, 'bold'))
+        label = tk.Label(nam, text= "Find all your ratings and visits:", padx=10, pady=10, font=('Helvetica', 12, 'bold'))
         label.grid(row=2, column=2)
-        button = tk.Button(nam, text="VIEW", command=lambda : sql.personal_scores(cursor, personal_code))
-        button.grid(row=3, column=2)
+        frame = tk.Frame(nam)
+        frame.grid(row=3, column=2)
+        button = tk.Button(frame, text="Ratings", command=lambda : sql.personal_scores(cursor, personal_code))
+        button.grid(row=0, column=1, padx=10)
+        button = tk.Button(frame, text="Visits", command=lambda : sql.get_visits(cursor, personal_code))
+        button.grid(row=0, column=2, padx=10)
+        
 
         def add_score():
             val = sql.add_scores(cursor, personal_code, product_number.get(), score.get(), cnx)
@@ -50,7 +55,7 @@ def start(cursor, cnx):
                 tk.messagebox.showerror(title="Error!", message=val[1])
 
 
-        label = tk.Label(nam, text= "Add a new score", padx=10, pady=10, font=('Helvetica',12 ,'bold'))
+        label = tk.Label(nam, text= "Add a new score:", padx=10, pady=10, font=('Helvetica',12 ,'bold'))
         label.grid(row=4, column=2)
         label = tk.Label(nam, text="*Insert product number: ", padx=10, pady=10)
         label.grid(row=5, column=1)
