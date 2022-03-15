@@ -21,19 +21,14 @@ def start(cursor):
         for row in copy:
             nam.title(f"{row[1]} {row[2]} ({personal_code})")
 
-        def chocolate_score():
-            planet = ent.get()
-            cursor.execute(f"SELECT * FROM planets WHERE name LIKE '%{planet}%'")
-            column_names = ["name", "data?", "vet ej"]
-            viewinfo(cursor, column_names)
-        
         nam.geometry("400x250")
         label = tk.Label(nam, text="Skriv in personnummer: ", padx=10, pady=10)
         label.grid(row=1, column=1)
         ent = tk.Entry(nam)
         ent.grid(row=1,column=2)
-        button = tk.Button(nam, text="visa", command=chocolate_score)
+        button = tk.Button(nam, text="visa")
         button.grid(row=1, column=3)
+        
 
 
     def Chocolate_personal():

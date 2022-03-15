@@ -1,3 +1,4 @@
+from ast import Store
 from functions import viewinfo
 import mysql.connector
 
@@ -24,6 +25,12 @@ def big_shoppers(cursor):
     cursor.execute(query)
     viewinfo(cursor,["Personal_Code", "City", "pay"])
 
+def inexpensive_chocolate(cursor, company, taste):
+    cursor.execute(f"""SELECT store.name, store.address, company, taste, MIN(sell.price)
+    FROM store JOIN sell ON store.name=sell.name
+    JOIN chocolate ON chocolate.product_number=sell.product_number
+    WHERE chocolate.company LIKE "%{company}%" AND chocolate.taste LIKE "%{taste}%"
+    GROUP BY store.name, store.address, company, taste ORDER BY MIN(sell.price)  ASC;""")
 
 def peoples_score(cursor):
     
