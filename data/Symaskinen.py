@@ -1,10 +1,7 @@
-from cgi import test
 import csv
-import errno
 import os
 import random as r
-from sqlite3 import Row
-from traceback import print_tb
+
 
 def uniq(lst):
     last = object()
@@ -13,15 +10,19 @@ def uniq(lst):
             continue
         yield item
         last = item
-def sort_and_deduplicate(l):
-    return list(uniq(sorted(l, reverse=True)))
+
+
+def sort_and_deduplicate(li):
+    return list(uniq(sorted(li, reverse=True)))
+
 
 def makeList(readern):
-    l = []
+    li = []
     for row in readern:
-        
-        l.append(list(row))
-    return l
+        li.append(list(row))
+    return li
+
+
 print(os.getcwd())
 print(os.path.exists("personalcode.csv"))
 
@@ -30,7 +31,7 @@ path2 = "data/MOCK_DATA (8).csv"
 
 newFile = "data/likes.csv"
 
-columns1 = [0,1]
+columns1 = [0, 1]
 columns2 = [0]
 rader = 1000
 
@@ -43,7 +44,7 @@ try:
         header = next(reader)  # Skip first row
         header2 = next(reader2)
 
-        f = open(newFile, "a",newline='')
+        f = open(newFile, "a", newline='')
         writer = csv.writer(f)
 
         lis = []
@@ -55,16 +56,16 @@ try:
 
         i = 0
         for t in header:
-            i +=1
+            i += 1
         j = 0
         for t in header2:
-            j +=1
+            j += 1
         lista1 = makeList(reader)
         lista2 = makeList(reader2)
         print(lista1, "naaj")
-        rows1 = list(range(0,len(lista1)))
+        rows1 = list(range(0, len(lista1)))
 
-        rows2 = list(range(0,len(lista2)))
+        rows2 = list(range(0, len(lista2)))
         r.shuffle(rows2)
         rows2copy = rows2
         r.shuffle(rows2copy)
@@ -89,24 +90,16 @@ try:
                 row = []
                 val1 = rows1[b]
                 val2 = rows2[b]
-                
                 for c in columns1:
                     row.append(lista1[val1][c])
                 for c in columns2:
                     row.append(lista2[val2][c])
                 testar.append(row)
-            
         except IndexError as er:
             print("aja" + str(er))
         testar2 = []
         for e in sort_and_deduplicate(testar):
-            writer.writerow(e)      
-        print(len(testar)-len(sort_and_deduplicate(testar)))    
+            writer.writerow(e)
+        print(len(testar)-len(sort_and_deduplicate(testar)))
 except FileNotFoundError as e:
     print("Sorry, the file " + "naaw" + "does not exist." + str(e))
-
-# def find(number, csv_file):
-#     for row in csv_file:
-#     #if current rows 2nd value is equal to input, print that row
-#         if number == row[1]:
-#             return row[]

@@ -4,21 +4,21 @@ import csv
 import GUI
 
 # Start connection to server
-# Filips lösenord UJHqn7wVr5
-cnx = mysql.connector.connect(user='root', password='UJHqn7wVr5',
+cnx = mysql.connector.connect(user='root', password='root',
                               host='127.0.0.1', charset='utf8')
 
 DB_NAME = 'chocolate_shop'
 cursor = cnx.cursor()
 
 # Set where to find the data to insert
-store_location = "data\\store.csv"
+store_location = "data/store.csv"
 customer_location = "data/customer.csv"
 chocolate_location = "data/chocolate.csv"
 visit_location = "data/visit.csv"
 sell_location = "data/sell.csv"
 likes_location = "data/likes.csv"
 
+# Set queries for creating all the tables and a view
 storeColumns = """CREATE TABLE store
                 (name nvarchar(50) not null,
                 address nvarchar(50),
@@ -52,11 +52,15 @@ likesColumns = """CREATE TABLE likes
                 score int,
                 primary key(personal_code,product_number))"""
 queryShoppers = """CREATE VIEW shoppers
-                AS SELECT customer.personal_code, customer.city, visit.name,  MAX(visit.pay) 
-                FROM customer JOIN visit ON customer.personal_code=visit.personal_code
-                GROUP BY customer.personal_code, customer.city, visit.name ORDER BY MAX(visit.pay) DESC"""
+                AS SELECT customer.personal_code, customer.city, visit.name,
+                MAX(visit.pay)
+                FROM customer JOIN visit ON
+                customer.personal_code=visit.personal_code
+                GROUP BY customer.personal_code, customer.city, visit.name
+                ORDER BY MAX(visit.pay) DESC"""
 
 
+# Create database
 def create_database(cursor, DB_NAME):
     # Creates the database:
     try:
@@ -69,6 +73,7 @@ def create_database(cursor, DB_NAME):
         exit(1)
 
 
+# Create table
 def create_table(cursor, tables):
     # Creates a table:
     try:
@@ -83,9 +88,8 @@ def create_table(cursor, tables):
     else:
         print("OK")
 
-def insert_new_data(cursor, table, values):
-    pass
 
+# Insert data into table
 def insert_into_table(cursor, file, table):
     # Read the csv files with tha data:
     data = open(file)
@@ -108,6 +112,7 @@ def insert_into_table(cursor, file, table):
     data.close()
 
 
+# The start of the program
 try:
     # If the database already exists:
     cursor.execute("USE {}".format(DB_NAME))
@@ -135,4 +140,4 @@ except mysql.connector.Error as err:
         cursor.execute(queryShoppers)
     else:
         print(err)
-GUI.start(cursor,cnx)
+GUI.start(cursor, cnx)
