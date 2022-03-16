@@ -5,7 +5,7 @@ import GUI
 
 # Start connection to server
 # Filips lösenord UJHqn7wVr5
-cnx = mysql.connector.connect(user='root', password='root',
+cnx = mysql.connector.connect(user='root', password='UJHqn7wVr5',
                               host='127.0.0.1', charset='utf8')
 
 DB_NAME = 'chocolate_shop'
@@ -135,6 +135,4 @@ except mysql.connector.Error as err:
         cursor.execute(queryShoppers)
     else:
         print(err)
-print("NU STARTAR VI!")
 GUI.start(cursor,cnx)
-print("Hallå")

@@ -69,6 +69,19 @@ def start(cursor, cnx):
         button.grid(row=5, column=5)
 
 
+        label = tk.Label(nam, text= "Find the the product number of a chocolate:", padx=10, pady=10, font=('Helvetica', 12, 'bold'))
+        label.grid(row=6, column=2)
+        label = tk.Label(nam, text="Insert company name: ", padx=10, pady=10)
+        label.grid(row=7, column=1)
+        company2 = tk.Entry(nam)
+        company2.grid(row=7,column=2)
+        label = tk.Label(nam, text="Insert taste: ", padx=10, pady=10)
+        label.grid(row=7, column=3)
+        taste2 = tk.Entry(nam)
+        taste2.grid(row=7,column=4)
+        button = tk.Button(nam, text="Search", command=lambda : sql.find_productnumber(cursor,company2.get(),taste2.get()))
+        button.grid(row=7, column=5)
+
     def Chocolate_personal():
         choco = tk.Tk()
         choco.title("Chocolate personal")

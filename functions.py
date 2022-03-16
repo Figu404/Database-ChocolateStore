@@ -1,11 +1,10 @@
 from textwrap import fill
 import tkinter as tk
+from tkinter import ttk
 from tkinter import END, messagebox, RIGHT, Y, NO, CENTER
 import mysql.connector
 from sqlalchemy import column
 import sqlqueries as sql
-from ScrollableFrame import ScrollableFrame
-
 
 def viewinfo(cursor, columns):
     view = tk.Tk()

@@ -31,7 +31,7 @@ def cheapest_chocolate(cursor, store):
     query = f"""SELECT store.name, store.address, MIN(sell.price)
     FROM store JOIN sell ON store.name=sell.name
     WHERE store.name LIKE "{store}%"
-    GROUP BY store.name, store.address ORDER BY MIN(sell.price) DESC"""
+    GROUP BY store.name, store.address ORDER BY MIN(sell.price) ASC"""
     cursor.execute(query)
     viewinfo(cursor,["Name","Adress", "Lowest price"])
 
@@ -50,13 +50,18 @@ def shoppers(cursor, store):
 
 
 def inexpensive_chocolate(cursor, company, taste):
-    print(company, taste)
     cursor.execute(f"""SELECT store.name, store.address, company, taste, MIN(sell.price)
     FROM store JOIN sell ON store.name=sell.name
     JOIN chocolate ON chocolate.product_number=sell.product_number
     WHERE chocolate.company LIKE "%{company}%" AND chocolate.taste LIKE "%{taste}%"
     GROUP BY store.name, store.address, company, taste ORDER BY MIN(sell.price)  ASC;""")
     viewinfo(cursor,["Store_name", "Adress", "Company_name", "Taste", "Lowest price"])
+
+def find_productnumber(cursor,company,taste):
+    cursor.execute(f"""SELECT product_number, company, taste
+    FROM chocolate
+    WHERE chocolate.company LIKE "%{company}%" AND chocolate.taste LIKE "%{taste}%";""")
+    viewinfo(cursor,["Product_number", "Company_name", "Taste"])
 
 def get_visits(cursor, personal_code):
     cursor.execute(f"SELECT name, date, time, pay FROM visit WHERE visit.personal_code = '{personal_code}' ;")
