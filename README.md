@@ -1,4 +1,4 @@
-# Programming Assignment 2
+# Database Chocolate Store
 
 22VT-1DT903-5hp-Växjö-33%
 
